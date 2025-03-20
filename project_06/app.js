@@ -9,7 +9,7 @@
 
 // Steps:
 
-//global 
+//global
 let div = null;
 
 // step 1 - create an onload handler
@@ -30,28 +30,32 @@ function main() {
   });
 
   copyBtn.addEventListener("click", () => {
-    if(!validHexCode(output.value)) {
+    if (!validHexCode(output.value)) {
       alert("Invalid color code!");
       return;
     }
-    
+
     navigator.clipboard.writeText(`#${output.value}`);
 
-    if(div !== null) {
+    if (div !== null) {
       div.remove();
       div = null;
     }
-    
+
     generateToastMessage(`#${output.value} copied.`);
   });
 
   output.addEventListener("keyup", (e) => {
     const color = e.target.value;
 
-    if(color.trim() && validHexCode(color)) {
-      root.style.backgroundColor = `#${color}`;
+    if (color.trim()) {
+      output.value = color.toUpperCase();
+
+      if (validHexCode(color)) {
+        root.style.backgroundColor = `#${color}`;
+      }
     }
-  })
+  });
 }
 
 // step 2 - random hex color generator function
@@ -78,7 +82,7 @@ function generateToastMessage(msg) {
     div.classList.remove("toast-message-slide-in");
     div.classList.add("toast-message-slide-out");
 
-    div.addEventListener("animationend", function() {
+    div.addEventListener("animationend", function () {
       div.remove();
       div = null;
     });
@@ -88,7 +92,7 @@ function generateToastMessage(msg) {
 }
 
 function validHexCode(color) {
-  if(color.length !== 6) return false;
+  if (color.length !== 6) return false;
 
   return /^[0-9A-Fa-f]{6}$/i.test(color);
 }
@@ -110,4 +114,3 @@ function validHexCode(color) {
 // step 10 - implement change handler on input field
 
 // step 11 - prevent copying hex code if invalid
-
