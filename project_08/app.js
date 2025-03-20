@@ -24,6 +24,7 @@ function main() {
   const output2 = document.getElementById("output2");
   const changeBtn = document.getElementById("change-btn");
   const copyBtn = document.getElementById("copy-btn");
+  const copyBtn2 = document.getElementById("copy-btn2");
 
   changeBtn.addEventListener("click", () => {
     const color = generateColorDecimal();
@@ -51,6 +52,22 @@ function main() {
     generateToastMessage(`#${output.value} copied.`);
   });
 
+  copyBtn2.addEventListener("click", () => {
+    if (!validHexCode(output.value)) {
+      alert("Invalid color code!");
+      return;
+    }
+
+    navigator.clipboard.writeText(`${output2.value}`);
+
+    if (div !== null) {
+      div.remove();
+      div = null;
+    }
+
+    generateToastMessage(`${output2.value} copied.`);
+  });
+
   output.addEventListener("keyup", (e) => {
     const color = e.target.value;
 
@@ -59,6 +76,7 @@ function main() {
 
       if (validHexCode(color)) {
         root.style.backgroundColor = `#${color}`;
+        output2.value = hexToRGB(color);
       }
     }
   });
@@ -92,6 +110,19 @@ function generateHexColor({ red, green, blue }) {
 
 // function 3 - generate rgba color code
 function generateRGBColor({ red, green, blue }) {
+  return `rgb(${red}, ${green}, ${blue})`;
+}
+
+/**
+ *
+ * @param {string} hex
+ */
+
+function hexToRGB(hex) {
+  const red = parseInt(hex.slice(0, 2), 16);
+  const green = parseInt(hex.slice(2, 4), 16);
+  const blue = parseInt(hex.slice(4), 16);
+
   return `rgb(${red}, ${green}, ${blue})`;
 }
 
@@ -150,5 +181,3 @@ function validHexCode(color) {
 // step 15 - update change handler
 
 // step 16 - implement copy function
-
-
