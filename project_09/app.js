@@ -26,18 +26,7 @@ function main() {
     handleGenerateRandomColorBtn
   );
 
-  hexInput.addEventListener("keyup", (e) => {
-    const color = e.target.value;
-
-    if (color.trim()) {
-      hexInput.value = color.toUpperCase();
-
-      if (validHexCode(color)) {
-        const decimalColorCode = hexToDecimalColor(color);
-        updateColorCodeToDom(decimalColorCode)
-      }
-    }
-  });
+  hexInput.addEventListener("keyup", handleHexInputUpdate);
 
   /* copyBtn.addEventListener("click", () => {
     if (!validHexCode(output.value)) {
@@ -124,6 +113,19 @@ function handleGenerateRandomColorBtn() {
   const color = generateColorDecimal();
 
   updateColorCodeToDom(color);
+}
+
+function handleHexInputUpdate(e) {
+  const hexColor = e.target.value;
+
+  if (hexColor.trim()) {
+    this.value = hexColor.toUpperCase();
+
+    if (validHexCode(hexColor)) {
+      const decimalColorCode = hexToDecimalColor(hexColor);
+      updateColorCodeToDom(decimalColorCode);
+    }
+  }
 }
 
 /**
