@@ -6,7 +6,7 @@
  */
 
 //Globals
-let div = null;
+let toastContainer = null;
 
 // onload handler
 window.onload = () => {
@@ -26,6 +26,10 @@ function main() {
   const colorSliderBlue = document.getElementById(
     "color-slider-blue"
   );
+  const colorModeRadio = document.getElementsByName("color-mode");
+  const copyToClipBoardBtn = document.getElementById(
+    "copy-to-clipboard"
+  );
 
   generateRandomColorBtn.addEventListener(
     "click",
@@ -42,6 +46,7 @@ function main() {
       colorSliderBlue
     )
   );
+
   colorSliderGreen.addEventListener(
     "change",
     handleColorSliderChange(
@@ -50,6 +55,7 @@ function main() {
       colorSliderBlue
     )
   );
+
   colorSliderBlue.addEventListener(
     "change",
     handleColorSliderChange(
@@ -58,6 +64,24 @@ function main() {
       colorSliderBlue
     )
   );
+
+  copyToClipBoardBtn.addEventListener("click", function () {
+    const colorMode = getCheckedValue(colorModeRadio);
+
+    if (colorMode === null) {
+      throw new Error("Invalid radio input!");
+    }
+
+    let copiedColor = "";
+
+    if (colorMode === "hex") {
+      copiedColor = `#${document.getElementById("input-hex").value}`;
+    } else {
+      copiedColor = document.getElementById("input-rgb").value;
+    }
+
+    navigator.clipboard.writeText(copiedColor);
+  });
 
   /* copyBtn.addEventListener("click", () => {
     if (!validHexCode(output.value)) {
@@ -96,50 +120,6 @@ function main() {
 
 // event handlers
 
-// DOM function
-function generateToastMessage(msg) {
-  div = document.createElement("div");
-  div.innerText = msg;
-  div.className = "toast-message toast-message-slide-in";
-
-  div.addEventListener("click", () => {
-    div.classList.remove("toast-message-slide-in");
-    div.classList.add("toast-message-slide-out");
-
-    div.addEventListener("animationend", function () {
-      div.remove();
-      div = null;
-    });
-  });
-
-  document.body.appendChild(div);
-}
-
-/**
- * update dom element with calculated color values
- * @param {object} color
- */
-function updateColorCodeToDom(color) {
-  const hexColor = generateHexColor(color);
-  const rgbColor = generateRGBColor(color);
-
-  document.getElementById("color-display").style.backgroundColor =
-    hexColor;
-  document.getElementById("input-hex").value = hexColor.substring(1);
-  document.getElementById("input-rgb").value = rgbColor;
-  document.getElementById("color-slider-red").value = color.red;
-  document.getElementById("color-slider-red-label").innerText =
-    color.red;
-  document.getElementById("color-slider-green").value = color.green;
-  document.getElementById("color-slider-green-label").innerText =
-    color.green;
-  document.getElementById("color-slider-blue").value = color.blue;
-  document.getElementById("color-slider-blue-label").innerText =
-    color.blue;
-}
-
-// utils function
-
 function handleGenerateRandomColorBtn() {
   const color = generateColorDecimal();
 
@@ -174,6 +154,72 @@ function handleColorSliderChange(
     updateColorCodeToDom(color);
   };
 }
+
+// DOM function
+
+/**
+ * generate a toast message and display in the dom using given message
+ * @param {string} msg
+ */
+function generateToastMessage(msg) {
+  toastContainer = document.createElement("div");
+  toastContainer.innerText = msg;
+  toastContainer.className = "toast-message toast-message-slide-in";
+
+  toastContainer.addEventListener("click", () => {
+    toastContainer.classList.remove("toast-message-slide-in");
+    toastContainer.classList.add("toast-message-slide-out");
+
+    toastContainer.addEventListener("animationend", function () {
+      toastContainer.remove();
+      toastContainer = null;
+    });
+  });
+
+  document.body.appendChild(toastContainer);
+}
+
+/**
+ * find the checked element from a list of radio buttons
+ * @param {array} nodes
+ * @returns {string | null}
+ */
+function getCheckedValue(nodes) {
+  let checkedItem = null;
+  for (let item of nodes) {
+    if (item.checked) {
+      checkedItem = item.value;
+      break;
+    }
+  }
+
+  return checkedItem;
+}
+
+/**
+ * update dom element with calculated color values
+ * @param {object} color
+ */
+function updateColorCodeToDom(color) {
+  const hexColor = generateHexColor(color);
+  const rgbColor = generateRGBColor(color);
+
+  document.getElementById("color-display").style.backgroundColor =
+    hexColor;
+  document.getElementById("input-hex").value = hexColor.substring(1);
+  document.getElementById("input-rgb").value = rgbColor;
+  document.getElementById("color-slider-red").value = color.red;
+  document.getElementById("color-slider-red-label").innerText =
+    color.red;
+  document.getElementById("color-slider-green").value = color.green;
+  document.getElementById("color-slider-green-label").innerText =
+    color.green;
+  document.getElementById("color-slider-blue").value = color.blue;
+  document.getElementById("color-slider-blue-label").innerText =
+    color.blue;
+}
+
+// utils function
 
 /**
  * generate and return a object of three random decimal color.
