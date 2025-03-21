@@ -15,11 +15,17 @@ window.onload = () => {
 
 // main function
 function main() {
-  const colorDisplay = document.getElementById("color-display");
   const generateRandomColorBtn = document.getElementById(
     "generate-random-color"
   );
   const hexInput = document.getElementById("input-hex");
+  const colorSliderRed = document.getElementById("color-slider-red");
+  const colorSliderGreen = document.getElementById(
+    "color-slider-green"
+  );
+  const colorSliderBlue = document.getElementById(
+    "color-slider-blue"
+  );
 
   generateRandomColorBtn.addEventListener(
     "click",
@@ -27,6 +33,31 @@ function main() {
   );
 
   hexInput.addEventListener("keyup", handleHexInputUpdate);
+
+  colorSliderRed.addEventListener(
+    "change",
+    handleColorSliderChange(
+      colorSliderRed,
+      colorSliderGreen,
+      colorSliderBlue
+    )
+  );
+  colorSliderGreen.addEventListener(
+    "change",
+    handleColorSliderChange(
+      colorSliderRed,
+      colorSliderGreen,
+      colorSliderBlue
+    )
+  );
+  colorSliderBlue.addEventListener(
+    "change",
+    handleColorSliderChange(
+      colorSliderRed,
+      colorSliderGreen,
+      colorSliderBlue
+    )
+  );
 
   /* copyBtn.addEventListener("click", () => {
     if (!validHexCode(output.value)) {
@@ -126,6 +157,22 @@ function handleHexInputUpdate(e) {
       updateColorCodeToDom(decimalColorCode);
     }
   }
+}
+
+function handleColorSliderChange(
+  colorSliderRed,
+  colorSliderGreen,
+  colorSliderBlue
+) {
+  return function () {
+    const color = {
+      red: parseInt(colorSliderRed.value),
+      green: parseInt(colorSliderGreen.value),
+      blue: parseInt(colorSliderBlue.value),
+    };
+
+    updateColorCodeToDom(color);
+  };
 }
 
 /**
