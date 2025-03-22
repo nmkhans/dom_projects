@@ -26,7 +26,6 @@ function main() {
   const colorSliderBlue = document.getElementById(
     "color-slider-blue"
   );
-  const colorModeRadio = document.getElementsByName("color-mode");
   const copyToClipBoardBtn = document.getElementById(
     "copy-to-clipboard"
   );
@@ -65,57 +64,7 @@ function main() {
     )
   );
 
-  copyToClipBoardBtn.addEventListener("click", function () {
-    const colorMode = getCheckedValue(colorModeRadio);
-
-    if (colorMode === null) {
-      throw new Error("Invalid radio input!");
-    }
-
-    let copiedColor = "";
-
-    if (colorMode === "hex") {
-      copiedColor = `#${document.getElementById("input-hex").value}`;
-    } else {
-      copiedColor = document.getElementById("input-rgb").value;
-    }
-
-    navigator.clipboard.writeText(copiedColor);
-  });
-
-  /* copyBtn.addEventListener("click", () => {
-    if (!validHexCode(output.value)) {
-      alert("Invalid color code!");
-      return;
-    }
-
-    navigator.clipboard.writeText(`#${output.value}`);
-
-    if (div !== null) {
-      div.remove();
-      div = null;
-    }
-
-    generateToastMessage(`#${output.value} copied.`);
-  });
-
-  copyBtn2.addEventListener("click", () => {
-    if (!validHexCode(output.value)) {
-      alert("Invalid color code!");
-      return;
-    }
-
-    navigator.clipboard.writeText(`${output2.value}`);
-
-    if (div !== null) {
-      div.remove();
-      div = null;
-    }
-
-    generateToastMessage(`${output2.value} copied.`);
-  });
-
-   */
+  copyToClipBoardBtn.addEventListener("click", handleCopyToClipBoard);
 }
 
 // event handlers
@@ -155,6 +104,42 @@ function handleColorSliderChange(
   };
 }
 
+function handleCopyToClipBoard() {
+  const colorModeRadio = document.getElementsByName("color-mode");
+  const colorMode = getCheckedValue(colorModeRadio);
+
+  if (colorMode === null) {
+    throw new Error("Invalid radio input!");
+  }
+
+  if (toastContainer !== null) {
+    toastContainer.remove();
+    toastContainer = null;
+  }
+
+  if (colorMode === "hex") {
+    const hexColor = document.getElementById("input-hex").value;
+
+    if (hexColor.trim() && validHexCode(hexColor)) {
+      navigator.clipboard.writeText(`#${hexColor}`);
+      generateToastMessage(`#${hexColor} copied.`);
+    } else {
+      alert("Invalid hex color");
+      return;
+    }
+  } else {
+    const rgbColor = document.getElementById("input-rgb").value;
+
+    if (rgbColor.trim()) {
+      navigator.clipboard.writeText(rgbColor);
+      generateToastMessage(`${rgbColor} copied.`);
+    } else {
+      alert("Invalid rgb color");
+      return;
+    }
+  }
+}
+
 // DOM function
 
 /**
@@ -165,6 +150,16 @@ function generateToastMessage(msg) {
   toastContainer = document.createElement("div");
   toastContainer.innerText = msg;
   toastContainer.className = "toast-message toast-message-slide-in";
+
+  setTimeout(() => {
+    toastContainer.classList.remove("toast-message-slide-in");
+    toastContainer.classList.add("toast-message-slide-out");
+
+    toastContainer.addEventListener("animationend", function () {
+      toastContainer.remove();
+      toastContainer = null;
+    });
+  }, 5000);
 
   toastContainer.addEventListener("click", () => {
     toastContainer.classList.remove("toast-message-slide-in");
@@ -290,3 +285,5 @@ function validHexCode(color) {
 
   return /^[0-9A-Fa-f]{6}$/i.test(color);
 }
+
+// project 9 part 7: video starts at 6 minutes
