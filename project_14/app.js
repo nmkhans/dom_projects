@@ -84,6 +84,7 @@ function main() {
   const saveToCustomBtn = document.getElementById("save-to-custom");
   const fileInput = document.getElementById("bg-file-input");
   const fileInputBtn = document.getElementById("bg-file-input-btn");
+  const fileDeleteBtn = document.getElementById("bg-file-delete-btn");
   const bgPreview = document.getElementById("bg-preview");
 
   generateRandomColorBtn.addEventListener(
@@ -147,6 +148,14 @@ function main() {
 
     bgPreview.style.background = `url(${imgUrl})`;
     document.body.style.background = `url(${imgUrl})`;
+    fileDeleteBtn.style.display = "inline-block";
+  });
+
+  fileDeleteBtn.addEventListener("click", function () {
+    bgPreview.style.background = `#DDDEEE`;
+    document.body.style.background = `#DDDEEE`;
+    fileDeleteBtn.style.display = "none";
+    fileInput.value = null;
   });
 }
 
