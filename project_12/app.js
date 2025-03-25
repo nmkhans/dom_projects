@@ -43,7 +43,7 @@ const copySound = new Audio("./copy-sound.wav");
 window.onload = () => {
   main();
 
-  document.getElementById("input-hex").value = "DDDEEE";
+  updateColorCodeToDom(hexToDecimalColor("DDDEEE"));
 
   // show preset colors
   displayColorBoxes(
