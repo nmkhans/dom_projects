@@ -35,6 +35,8 @@ const defaultPresetColors = [
   "#ffcc80",
 ];
 
+const customColors = [];
+
 const copySound = new Audio("./copy-sound.wav");
 
 // onload handler
@@ -65,6 +67,8 @@ function main() {
     "copy-to-clipboard"
   );
   const presetColorParent = document.getElementById("preset-colors");
+  const customColorParent = document.getElementById("custom-colors");
+  const saveToCustomBtn = document.getElementById("save-to-custom");
 
   generateRandomColorBtn.addEventListener(
     "click",
@@ -102,7 +106,14 @@ function main() {
 
   copyToClipBoardBtn.addEventListener("click", handleCopyToClipBoard);
 
-  presetColorParent.addEventListener("click", handlePresetColorClick);
+  presetColorParent.addEventListener("click", handlePresetAndCustomColorClick);
+
+  saveToCustomBtn.addEventListener(
+    "click",
+    handleSaveToCustom(hexInput, customColorParent)
+  );
+
+  customColorParent.addEventListener("click", handlePresetAndCustomColorClick);
 }
 
 // event handlers
@@ -178,7 +189,7 @@ function handleCopyToClipBoard() {
   }
 }
 
-function handlePresetColorClick(e) {
+function handlePresetAndCustomColorClick(e) {
   const element = e.target;
   if (element.className === "color-box") {
     const hexColor = element.getAttribute("data-color");
@@ -196,6 +207,16 @@ function handlePresetColorClick(e) {
     updateColorCodeToDom(decimalColor);
     generateToastMessage(`${hexColor.toUpperCase()} copied.`);
   }
+}
+
+function handleSaveToCustom(hexInput, customColorParent) {
+  return function () {
+    const hexColor = `#${hexInput.value}`;
+    customColors.push(hexColor);
+
+    customColorParent.innerHTML = "";
+    displayColorBoxes(customColorParent, customColors);
+  };
 }
 
 // DOM function
