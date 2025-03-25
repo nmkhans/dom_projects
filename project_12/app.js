@@ -35,7 +35,7 @@ const defaultPresetColors = [
   "#ffcc80",
 ];
 
-const customColors = [];
+let customColors = new Array(12);
 
 const copySound = new Audio("./copy-sound.wav");
 
@@ -43,11 +43,24 @@ const copySound = new Audio("./copy-sound.wav");
 window.onload = () => {
   main();
 
+  document.getElementById("input-hex").value = "DDDEEE";
+
   // show preset colors
   displayColorBoxes(
     document.getElementById("preset-colors"),
     defaultPresetColors
   );
+
+  const customColorsString = localStorage.getItem("custom-color");
+
+  // load saved custom color
+  if (customColorsString) {
+    customColors = JSON.parse(customColorsString);
+    displayColorBoxes(
+      document.getElementById("custom-colors"),
+      customColors
+    );
+  }
 };
 
 // main function
@@ -106,14 +119,20 @@ function main() {
 
   copyToClipBoardBtn.addEventListener("click", handleCopyToClipBoard);
 
-  presetColorParent.addEventListener("click", handlePresetAndCustomColorClick);
+  presetColorParent.addEventListener(
+    "click",
+    handlePresetAndCustomColorClick
+  );
 
   saveToCustomBtn.addEventListener(
     "click",
     handleSaveToCustom(hexInput, customColorParent)
   );
 
-  customColorParent.addEventListener("click", handlePresetAndCustomColorClick);
+  customColorParent.addEventListener(
+    "click",
+    handlePresetAndCustomColorClick
+  );
 }
 
 // event handlers
@@ -212,7 +231,21 @@ function handlePresetAndCustomColorClick(e) {
 function handleSaveToCustom(hexInput, customColorParent) {
   return function () {
     const hexColor = `#${hexInput.value}`;
-    customColors.push(hexColor);
+
+    if (customColors.includes(hexColor)) {
+      alert("Color already exist in list");
+      return;
+    }
+    customColors.unshift(hexColor);
+
+    if (customColors.length > 12) {
+      customColors = customColors.slice(0, 12);
+    }
+
+    localStorage.setItem(
+      "custom-color",
+      JSON.stringify(customColors)
+    );
 
     customColorParent.innerHTML = "";
     displayColorBoxes(customColorParent, customColors);
@@ -314,8 +347,10 @@ function generateColorBox(color) {
  */
 function displayColorBoxes(parent, colors) {
   colors.forEach((color) => {
-    const colorBox = generateColorBox(color);
-    parent.appendChild(colorBox);
+    if (validHexCode(color?.slice(1))) {
+      const colorBox = generateColorBox(color);
+      parent.appendChild(colorBox);
+    }
   });
 }
 
@@ -386,7 +421,7 @@ function hexToDecimalColor(hex) {
  * @returns {boolean}
  */
 function validHexCode(color) {
-  if (color.length !== 6) return false;
+  if (color?.length !== 6) return false;
 
   return /^[0-9A-Fa-f]{6}$/i.test(color);
 }
