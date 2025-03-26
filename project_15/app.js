@@ -518,4 +518,3 @@ function validHexCode(color) {
   return /^[0-9A-Fa-f]{6}$/i.test(color);
 }
 
-// project 15 video start at 10 minute
