@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Converter</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./app.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="header-title">Multiple Converter</h1>
+      </div>
+      <div class="divider"></div>
+      <div class="category-wrap">
+        <label class="lead" for="category-select"
+          >Select category</label
+        >
+        <select id="category-select"></select>
+      </div>
+      <div class="input-group-wrap">
+        <div>
+          <input type="text" id="left-input" />
+          <select id="left-select"></select>
+        </div>
+        <div class="equal">=</div>
+        <div>
+          <input type="text" id="right-input" />
+          <select id="right-select"></select>
+        </div>
+      </div>
+      <div class="formula-wrap">
+        <h3>Formula</h3>
+        <p id="formula-text">Formula text</p>
+      </div>
+    </div>
+  </body>
+</html>
